@@ -43,4 +43,4 @@ The application provides financial insights through visual charts, spending anal
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone <[repository-url](https://github.com/LupiwoPhillips/personal-finance-dashbaord.git)>
