@@ -3,7 +3,8 @@
     <!-- Navbar -->
     <nav class="navbar">
       <h2>Personal Finance Dashboard</h2>
-      <div>
+      
+      <div class="nav-links">
         <router-link to="/dashboard">Dashboard</router-link>
         <router-link to="/dashboard/expenses">Expenses</router-link>
         <router-link to="/dashboard/income">Income</router-link>
@@ -42,9 +43,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 15px;
   background: #2e7d32;
   color: white;
+  flex-wrap: wrap;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .navbar a {
