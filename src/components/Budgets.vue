@@ -6,7 +6,7 @@ export default {
     return { financeStore, category: "", amount: 0 };
   },
   methods: {
-    addExpense() {
+    addBudget() {
       if (this.category && this.amount > 0) {
         this.financeStore.addBudgets(this.category, this.amount);
         this.category = "";
@@ -20,7 +20,7 @@ export default {
 <template>
   <div>
     <h2>Budgets</h2>
-    <form @submit.prevent="addExpense" class="budget-form">
+    <form @submit.prevent="addBudget" class="budget-form">
       <input v-model="category" placeholder="Category" />
       <input v-model.number="amount" type="number" placeholder="Amount" />
       <button type="submit">Add Budget</button>
