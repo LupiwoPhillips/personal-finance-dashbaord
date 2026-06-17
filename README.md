@@ -33,7 +33,8 @@ The application provides financial insights through visual charts, spending anal
 
 ## Screenshots
 
-(Add screenshots here)
+<img width="1898" height="905" alt="image" src="https://github.com/user-attachments/assets/06437da5-5cb0-46c7-91c6-0975114acad3" />
+
 
 ---
 
