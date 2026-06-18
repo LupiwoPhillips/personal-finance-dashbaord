@@ -11,6 +11,14 @@ export const financeStore = reactive({
     { id: 2, category: "Transport", amount: 2000 },
     { id: 3, category: "Rent", amount: 7000 },
   ],
+  budgets: [
+    { id: 1, source: "Salary", amount: 20000 },
+    { id: 2, source: "Freelance", amount: 5000 },
+  ],
+  investments: [
+    { id: 1, source: "Stocks", amount: 10000 },
+    { id: 2, source: "Bonds", amount: 5000 },
+  ],
 
   // Add income
   addIncome(source, amount) {
@@ -26,6 +34,24 @@ export const financeStore = reactive({
     this.expenses.push({
       id: Date.now(),
       category,
+      amount: Number(amount),
+    });
+  },
+
+  // Add budget
+  addBudget(source, amount) {
+    this.budgets.push({
+      id: Date.now(),
+      source,
+      amount: Number(amount),
+    });
+  },
+
+  // Add investment
+  addInvestment(source, amount) {
+    this.investments.push({
+      id: Date.now(),
+      source,
       amount: Number(amount),
     });
   },
