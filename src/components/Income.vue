@@ -3,13 +3,13 @@ import { financeStore } from "../context/financeStore";
 
 export default {
   setup() {
-    return { financeStore, category: "", amount: 0 };
+    return { financeStore, source: "", amount: 0 };
   },
   methods: {
     addIncome() {
-      if (this.category && this.amount > 0) {
-        this.financeStore.addIncome(this.category, this.amount);
-        this.category = "";
+      if (this.source && this.amount > 0) {
+        this.financeStore.addIncome(this.source, this.amount);
+        this.source = "";
         this.amount = 0;
       }
     },
@@ -21,7 +21,7 @@ export default {
   <div>
     <h2>Income</h2>
     <form @submit.prevent="addIncome" class="income-form">
-      <input v-model="category" placeholder="Category" />
+      <input v-model="source" placeholder="Income Source" />
       <input v-model.number="amount" type="number" placeholder="Amount" />
       <button type="submit">Add Income</button>
     </form>
@@ -32,7 +32,7 @@ export default {
         :key="e.id"
         class="income-item"
       >
-        <span class="income-category">{{ e.source }}</span>
+        <span class="income-source">{{ e.source }}</span>
         <span class="income-amount">R {{ e.amount }}</span>
       </div>
     </div>
@@ -92,7 +92,7 @@ export default {
   box-shadow: 0 4px 16px rgba(44, 70, 60, 0.08);
 }
 
-.income-category {
+.income-source {
   color: #2e7d32;
   font-weight: 600;
 }

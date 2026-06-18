@@ -95,6 +95,7 @@ export default {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: "bottom",
@@ -160,12 +161,12 @@ p {
 
 /* Chart container */
 .chart-container {
-  margin: 40px 0;
-  padding: 25px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  width: 100%;
+  max-width: 400px;   /* controls width */
+  height: 250px;      /* controls height */
+  margin: 0 auto;
 }
+
 
 /* Quick links grid */
 .dashboard-grid {
