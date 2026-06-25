@@ -165,6 +165,7 @@ p {
   max-width: 400px;   /* controls width */
   height: 250px;      /* controls height */
   margin: 0 auto;
+  margin-top: 40px;
 }
 
 

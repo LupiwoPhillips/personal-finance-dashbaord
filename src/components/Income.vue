@@ -1,10 +1,27 @@
 <script>
 import { financeStore } from "../context/financeStore";
+import StatsCard from "./StatsCard.vue";
 
 export default {
+  components: { StatsCard },
+
   setup() {
-    return { financeStore, source: "", amount: 0 };
+    return {
+      financeStore,
+      source: "",
+      amount: 0,
+    };
   },
+
+  computed: {
+    totalIncome() {
+      return this.financeStore.incomes.reduce(
+        (sum, e) => sum + e.amount,
+        0
+      );
+    },
+  },
+
   methods: {
     addIncome() {
       if (this.source && this.amount > 0) {
@@ -19,33 +36,98 @@ export default {
 
 <template>
   <div>
-    <h2>Income</h2>
-    <form @submit.prevent="addIncome" class="income-form">
-      <input v-model="source" placeholder="Income Source" />
-      <input v-model.number="amount" type="number" placeholder="Amount" />
-      <button type="submit">Add Income</button>
-    </form>
+  <h2>Income</h2>
 
-    <div class="income-list">
-      <div
-        v-for="e in financeStore.incomes"
-        :key="e.id"
-        class="income-item"
-      >
-        <span class="income-source">{{ e.source }}</span>
-        <span class="income-amount">R {{ e.amount }}</span>
+  <div class="stats-row">
+    <StatsCard
+      title="Total Income"
+      :value="'R ' + totalIncome"
+      variant="red"
+    />
+    <StatsCard
+      title="Entries"
+      :value="financeStore.incomes.length"
+      variant="blue"
+    />
+  </div>
+
+  <form @submit.prevent="addIncome" class="income-form">
+    <input v-model="source" placeholder="Source" />
+    <input v-model.number="amount" type="number" placeholder="Amount" />
+    <button>Add Income</button>
+  </form>
+
+  <div class="insight-box">
+    <h3>Insights</h3>
+    <p>You earned R {{ totalIncome }} so far this month.</p>
+  </div>
+
+  <div class="income-list">
+    <div v-for="e in financeStore.incomes" :key="e.id" class="income-card">
+      <div class="income-header">
+        <span>{{ e.source }}</span>
+        <span>R {{ e.amount }}</span>
+      </div>
+
+      <div class="progress">
+        <div class="fill"></div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <style scoped>
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.insight-box {
+  background: #fff7e6;
+  padding: 20px;
+  border-left: 6px solid orange;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.income-card {
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.income-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress {
+  height: 8px;
+  background: #eee;
+  margin-top: 12px;
+  border-radius: 999px;
+}
+
+.fill {
+  height: 100%;
+  width: 70%;
+  background: linear-gradient(90deg, #ef4444, #f97316);
+  border-radius: 999px;
+}
+
 .income-form {
+  margin-top: 20px;
+  gap: 12px;
   background: #fff;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(44, 70, 60, 0.1);
-  margin-bottom: 20px;
 }
 
 .income-form input {
@@ -57,48 +139,15 @@ export default {
 }
 
 .income-form button {
-  background-color: #2e7d32;
+  background-color: #ef4444;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
 }
-
 .income-form button:hover {
-  background-color: #276628;
+  background-color: #dc2626;
 }
 
-.income-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.income-item {
-  background: #fff;
-  border-left: 7px solid #2e7d32;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(44, 70, 60, 0.05);
-  padding: 12px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1rem;
-}
-
-.income-item:hover {
-  background: #f3f8f4;
-  box-shadow: 0 4px 16px rgba(44, 70, 60, 0.08);
-}
-
-.income-source {
-  color: #2e7d32;
-  font-weight: 600;
-}
-
-.income-amount {
-  color: #444;
-  font-weight: 500;
-}
 </style>

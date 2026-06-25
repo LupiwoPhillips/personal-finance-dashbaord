@@ -1,10 +1,27 @@
 <script>
 import { financeStore } from "../context/financeStore";
+import StatsCard from "./StatsCard.vue";
 
 export default {
+  components: { StatsCard },
+
   setup() {
-    return { financeStore, source: "", amount: 0 };
+    return {
+      financeStore,
+      source: "",
+      amount: 0,
+    };
   },
+
+  computed: {
+    totalInvestment() {
+      return this.financeStore.investments.reduce(
+        (sum, e) => sum + e.amount,
+        0
+      );
+    },
+  },
+
   methods: {
     addInvestment() {
       if (this.source && this.amount > 0) {
@@ -19,38 +36,101 @@ export default {
 
 <template>
   <div>
-    <h2>Investments</h2>
-    <form @submit.prevent="addInvestment" class="investment-form">
-      <input v-model="source" placeholder="Investment Source" />
-      <input v-model.number="amount" type="number" placeholder="Amount" />
-      <button type="submit">Add Investment</button>
-    </form>
+  <h2>Investments</h2>
 
-    <div class="investment-list">
-      <div
-        v-for="e in financeStore.investments"
-        :key="e.id"
-        class="investment-item"
-      >
-        <span class="investment-source">{{ e.source }}</span>
-        <span class="investment-amount">R {{ e.amount }}</span>
+  <div class="stats-row">
+    <StatsCard
+      title="Total Investment"
+      :value="'R ' + totalInvestment"
+      variant="red"
+    />
+    <StatsCard
+      title="Entries"
+      :value="financeStore.investments.length"
+      variant="blue"
+    />
+  </div>
+
+  <form @submit.prevent="addInvestment" class="income-form">
+    <input v-model="source" placeholder="Source" />
+    <input v-model.number="amount" type="number" placeholder="Amount" />
+    <button>Add Investment</button>
+  </form>
+
+  <div class="insight-box">
+    <h3>Insights</h3>
+    <p>You have allocated R {{ totalInvestment }} towards your investments so far this month.</p>
+  </div>
+
+  <div class="income-list">
+    <div v-for="e in financeStore.investments" :key="e.id" class="income-card">
+      <div class="income-header">
+        <span>{{ e.source }}</span>
+        <span>R {{ e.amount }}</span>
+      </div>
+
+      <div class="progress">
+        <div class="fill"></div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
-
-
 <style scoped>
-.investment-form {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(44, 70, 60, 0.1);
-  margin-bottom: 20px;
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 25px;
+  margin-top: 20px;
+  justify-content: center;
 }
 
-.investment-form input {
+.insight-box {
+  background: #fff7e6;
+  padding: 20px;
+  border-left: 6px solid orange;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.income-card {
+  background: white;
+  padding: 18px;
+  border-radius: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.income-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress {
+  height: 8px;
+  background: #eee;
+  margin-top: 12px;
+  border-radius: 999px;
+}
+
+.fill {
+  height: 100%;
+  width: 70%;
+  background: linear-gradient(90deg, #ef4444, #f97316);
+  border-radius: 999px;
+}
+
+.income-form {
+  margin-top: 20px;
+  gap: 12px;
+  background: #fff;
+  padding: 20px;
+}
+
+.income-form input {
   margin-right: 12px;
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -58,49 +138,16 @@ export default {
   font-size: 1rem;
 }
 
-.investment-form button {
-  background-color: #2e7d32;
+.income-form button {
+  background-color: #ef4444;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
 }
-
-.investment-form button:hover {
-  background-color: #276628;
+.income-form button:hover {
+  background-color: #dc2626;
 }
 
-.investment-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.investment-item {
-  background: #fff;
-  border-left: 7px solid #2e7d32;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(44, 70, 60, 0.05);
-  padding: 12px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1rem;
-}
-
-.investment-item:hover {
-  background: #f3f8f4;
-  box-shadow: 0 4px 16px rgba(44, 70, 60, 0.08);
-}
-
-.investment-source {
-  color: #2e7d32;
-  font-weight: 600;
-}
-
-.investment-amount {
-  color: #444;
-  font-weight: 500;
-}
 </style>
