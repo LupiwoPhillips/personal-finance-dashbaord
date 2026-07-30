@@ -1,47 +1,20 @@
-import React, { useState } from "react";
-import { auth } from "../services/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/dashboard");
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
-  return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md w-80">
-        <h1 className="text-xl font-bold mb-4">Login</h1>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
-      </form>
-    </div>
-  );
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-export default Login;
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const analytics = getAnalytics(app);
+
+export default app;
