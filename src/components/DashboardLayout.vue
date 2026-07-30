@@ -39,46 +39,148 @@ export default {
 </script>
 
 <style scoped>
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background: #2e7d32;
-  color: white;
-  flex-wrap: wrap;
+
+.dashboard-layout{
+
+    min-height:100vh;
+
+    background:#0f172a;
+
 }
 
-.nav-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+
+/* NAVBAR */
+
+.navbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 40px;
+
+    background:#111827;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
 }
 
-.navbar a {
-  margin-left: 15px;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
+
+.navbar h2{
+
+    color:white;
+
 }
 
-.navbar a.router-link-exact-active {
-  border-bottom: 2px solid white;
+
+.nav-links{
+
+    display:flex;
+
+    gap:20px;
+
+    align-items:center;
+
 }
 
-main {
-  padding: 20px;
+
+.navbar a{
+
+    color:#94a3b8;
+
+    text-decoration:none;
+
+    font-weight:500;
+
+    transition:.2s;
+
 }
 
-.footer {
-  margin-top: 30px;
-  text-align: center;
-  padding: 15px;
-  background: #f4f4f4;
-  border-top: 1px solid #ddd;
+
+.navbar a:hover{
+
+    color:#22c55e;
+
 }
 
+
+.navbar a.router-link-exact-active{
+
+    color:#22c55e;
+
+}
+
+
+
+/* FOOTER */
+
+.footer{
+
+    text-align:center;
+
+    padding:20px;
+
+    color:#64748b;
+
+    border-top:1px solid rgba(255,255,255,.06);
+
+}
+
+
+
+/* TABLET */
+
+@media(max-width:900px){
+
+.navbar{
+
+    padding:20px;
+
+    flex-direction:column;
+
+    gap:20px;
+
+}
+
+
+.nav-links{
+
+    width:100%;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+}
+
+
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+
+.navbar h2{
+
+    font-size:1.2rem;
+
+}
+
+
+.nav-links{
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+
+}
 
 </style>
-
-
