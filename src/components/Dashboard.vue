@@ -1,210 +1,504 @@
 <template>
   <section class="dashboard">
-    <h1>Welcome Back 👋</h1>
-    <p>Here’s an overview of your finances today:</p>
 
-    <!-- Summary Cards -->
-    <div class="summary-cards">
-      <div class="card income">
-        <h3>💵 Total Income</h3>
-        <p>R {{ totalIncome.toLocaleString() }}</p>
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <h1>Good Evening 👋</h1>
+        <p>Here's your financial overview for today.</p>
       </div>
-      <div class="card expenses">
-        <h3>💸 Total Expenses</h3>
-        <p>R {{ totalExpenses.toLocaleString() }}</p>
-      </div>
-      <div class="card balance">
-        <h3>💎 Net Balance</h3>
-        <p>R {{ netBalance.toLocaleString() }}</p>
-      </div>
+
+      <button class="add-btn">
+        + Add Transaction
+      </button>
     </div>
 
-    <!-- Doughnut Chart -->
-    <div class="chart-container">
-      <canvas id="financeChart"></canvas>
+    <!-- Stats -->
+
+    <div class="stats">
+
+      <div class="stat-card income">
+        <span>Monthly Income</span>
+        <h2>R {{ totalIncome.toLocaleString() }}</h2>
+        <small>+8.5% this month</small>
+      </div>
+
+      <div class="stat-card expense">
+        <span>Monthly Expenses</span>
+        <h2>R {{ totalExpenses.toLocaleString() }}</h2>
+        <small>-2.3% this month</small>
+      </div>
+
+      <div class="stat-card balance">
+        <span>Net Balance</span>
+        <h2>R {{ netBalance.toLocaleString() }}</h2>
+        <small>Healthy cashflow</small>
+      </div>
+
+      <div class="stat-card score">
+        <span>Financial Health</span>
+        <h2>82%</h2>
+        <small>Excellent</small>
+      </div>
+
     </div>
 
-    <!-- Quick Links -->
-    <div class="dashboard-grid">
-      <div class="card glass">
-        <h3>📊 Budgets</h3>
-        <p>Set goals and track your spending.</p>
-        <router-link to="/dashboard/budgets" class="btn">View</router-link>
+    <!-- Main Grid -->
+
+    <div class="main-grid">
+
+      <!-- Left -->
+
+      <div>
+
+        <div class="card chart-card">
+          <h3>Spending Overview</h3>
+
+          <div class="chart-wrapper">
+            <canvas id="financeChart"></canvas>
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <h3>Recent Transactions</h3>
+
+          <div class="transaction">
+
+            <div>
+              <strong>Spotify</strong>
+              <span>Entertainment</span>
+            </div>
+
+            <p>- R99</p>
+
+          </div>
+
+          <div class="transaction">
+
+            <div>
+              <strong>Salary</strong>
+              <span>Income</span>
+            </div>
+
+            <p class="green">+ R17 000</p>
+
+          </div>
+
+          <div class="transaction">
+
+            <div>
+              <strong>Checkers</strong>
+              <span>Groceries</span>
+            </div>
+
+            <p>- R635</p>
+
+          </div>
+
+          <div class="transaction">
+
+            <div>
+              <strong>Uber</strong>
+              <span>Transport</span>
+            </div>
+
+            <p>- R110</p>
+
+          </div>
+
+        </div>
+
       </div>
-      <div class="card glass">
-        <h3>💸 Expenses</h3>
-        <p>Monitor your daily outflow.</p>
-        <router-link to="/dashboard/expenses" class="btn">View</router-link>
+
+      <!-- Right -->
+
+      <div>
+
+        <div class="card">
+
+          <h3>Budget Progress</h3>
+
+          <div class="budget">
+
+            <span>Groceries</span>
+
+            <div class="progress">
+              <div style="width:72%"></div>
+            </div>
+
+          </div>
+
+          <div class="budget">
+
+            <span>Transport</span>
+
+            <div class="progress">
+              <div style="width:45%"></div>
+            </div>
+
+          </div>
+
+          <div class="budget">
+
+            <span>Entertainment</span>
+
+            <div class="progress">
+              <div style="width:20%"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card ai">
+
+          <h3>🤖 AI Advisor</h3>
+
+          <div class="tip">
+
+            <p>
+              You're on track to save
+              <strong>R4,500</strong>
+              this month.
+            </p>
+
+          </div>
+
+          <div class="tip">
+
+            <p>
+              Spending on restaurants increased by
+              <strong>18%</strong>.
+            </p>
+
+          </div>
+
+          <div class="tip">
+
+            <p>
+              Consider investing
+              <strong>R500</strong>
+              into your ETF portfolio this month.
+            </p>
+
+          </div>
+
+        </div>
+
       </div>
-      <div class="card glass">
-        <h3>💵 Income</h3>
-        <p>Track earnings and salary sources.</p>
-        <router-link to="/dashboard/income" class="btn">View</router-link>
-      </div>
-      <div class="card glass">
-        <h3>📈 Investments</h3>
-        <p>Monitor your assets and portfolio growth.</p>
-        <router-link to="/dashboard/investments" class="btn">View</router-link>
-      </div>
+
     </div>
+
   </section>
 </template>
-
 
 <script>
 import Chart from "chart.js/auto";
 
 export default {
-  name: "Dashboard",
-  data() {
-    return {
-      totalIncome: 25000,
-      totalExpenses: 12000,
-    };
+
+  data(){
+
+    return{
+
+      totalIncome:25000,
+
+      totalExpenses:12000
+
+    }
+
   },
-  computed: {
-    netBalance() {
-      return this.totalIncome - this.totalExpenses;
-    },
+
+  computed:{
+
+    netBalance(){
+
+      return this.totalIncome-this.totalExpenses
+
+    }
+
   },
-  mounted() {
-    const ctx = document.getElementById("financeChart").getContext("2d");
 
-    // Gradient arcs
-    const gradientIncome = ctx.createLinearGradient(0, 0, 0, 400);
-    gradientIncome.addColorStop(0, "#43e97b");
-    gradientIncome.addColorStop(1, "#38f9d7");
+  mounted(){
 
-    const gradientExpenses = ctx.createLinearGradient(0, 0, 0, 400);
-    gradientExpenses.addColorStop(0, "#f85032");
-    gradientExpenses.addColorStop(1, "#e73827");
+    const ctx=document.getElementById("financeChart").getContext("2d");
 
-    new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["Expenses", "Income"],
-        datasets: [
-          {
-            data: [this.totalExpenses, this.totalIncome],
-            backgroundColor: [gradientExpenses, gradientIncome],
-            borderWidth: 2,
-            borderColor: "#fff",
-            hoverOffset: 20,
-          },
-        ],
+    new Chart(ctx,{
+
+      type:"doughnut",
+
+      data:{
+
+        labels:["Expenses","Income"],
+
+        datasets:[{
+
+          data:[this.totalExpenses,this.totalIncome],
+
+          backgroundColor:["#ef4444","#22c55e"]
+
+        }]
+
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: "bottom",
-            labels: {
-              color: "#fff",
-              font: { size: 14, weight: "bold" },
-            },
-          },
-        },
-      },
-    });
-  },
-};
+
+      options:{
+
+        plugins:{
+
+          legend:{
+
+            labels:{
+
+              color:"#cbd5e1"
+
+            }
+
+          }
+
+        }
+
+      }
+
+    })
+
+  }
+
+}
 </script>
 
-
 <style scoped>
-.dashboard {
-  padding: 20px;
-  min-height: 100vh;
-  background: linear-gradient(160deg, #141e30, #243b55);
-  color: #fff;
-  font-family: "Poppins", sans-serif;
+
+.dashboard{
+
+padding:40px;
+
+color:white;
+
 }
 
-h1 {
-  font-size: 2.5rem;
-}
-p {
-  color: #ccc;
-  margin-bottom: 30px;
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:40px;
+
 }
 
-/* Summary cards */
-.summary-cards {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.summary-cards .card {
-  flex: 1;
-  padding: 25px;
-  border-radius: 20px;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.summary-cards .card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+.header h1{
+
+font-size:2.5rem;
+
+margin-bottom:8px;
+
 }
 
-.summary-cards .income {
-  background: linear-gradient(135deg, #43e97b, #38f9d7);
-}
-.summary-cards .expenses {
-  background: linear-gradient(135deg, #f85032, #e73827);
-}
-.summary-cards .balance {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+.header p{
+
+color:#94a3b8;
+
 }
 
-/* Chart container */
-.chart-container {
-  width: 100%;
-  max-width: 400px;   /* controls width */
-  height: 250px;      /* controls height */
-  margin: 0 auto;
-  margin-top: 40px;
+.add-btn{
+
+background:#22c55e;
+
+border:none;
+
+padding:14px 22px;
+
+border-radius:14px;
+
+color:white;
+
+cursor:pointer;
+
+font-weight:600;
+
 }
 
+.stats{
 
-/* Quick links grid */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
+display:grid;
 
-.dashboard-grid .card.glass {
-  padding: 20px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-  transition: transform 0.3s, background 0.3s;
-  text-align: center;
-}
-.dashboard-grid .card.glass:hover {
-  transform: translateY(-10px);
-  background: rgba(255,255,255,0.15);
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+
+gap:20px;
+
+margin-bottom:35px;
+
 }
 
-/* Buttons */
-.btn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 8px 15px;
-  border-radius: 12px;
-  border: 1px solid #fff;
-  color: #fff;
-  background: transparent;
-  font-weight: bold;
-  transition: all 0.3s;
+.stat-card{
+
+padding:25px;
+
+border-radius:20px;
+
+background:#1e293b;
+
 }
-.btn:hover {
-  background: #fff;
-  color: #141e30;
+
+.stat-card span{
+
+color:#94a3b8;
+
+}
+
+.stat-card h2{
+
+margin:15px 0;
+
+font-size:2rem;
+
+}
+
+.income{
+
+border-left:5px solid #22c55e;
+
+}
+
+.expense{
+
+border-left:5px solid #ef4444;
+
+}
+
+.balance{
+
+border-left:5px solid #3b82f6;
+
+}
+
+.score{
+
+border-left:5px solid gold;
+
+}
+
+.main-grid{
+
+display:grid;
+
+grid-template-columns:2fr 1fr;
+
+gap:25px;
+
+}
+
+.card{
+
+background:#1e293b;
+
+padding:25px;
+
+border-radius:20px;
+
+margin-bottom:25px;
+
+}
+
+.chart-wrapper{
+
+height:320px;
+
+}
+
+.transaction{
+
+display:flex;
+
+justify-content:space-between;
+
+padding:18px 0;
+
+border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.transaction span{
+
+display:block;
+
+font-size:.9rem;
+
+color:#94a3b8;
+
+}
+
+.green{
+
+color:#22c55e;
+
+}
+
+.budget{
+
+margin:25px 0;
+
+}
+
+.progress{
+
+background:#0f172a;
+
+height:10px;
+
+border-radius:50px;
+
+overflow:hidden;
+
+margin-top:10px;
+
+}
+
+.progress div{
+
+height:100%;
+
+background:#22c55e;
+
+border-radius:50px;
+
+}
+
+.tip{
+
+background:#0f172a;
+
+padding:18px;
+
+border-radius:12px;
+
+margin-top:15px;
+
+line-height:1.6;
+
+}
+
+@media(max-width:1000px){
+
+.main-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.header{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:20px;
+
+}
+
 }
 </style>

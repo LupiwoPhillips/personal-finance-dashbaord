@@ -36,20 +36,28 @@ export default {
 
 <template>
   <div>
-  <h2>Budgets</h2>
+  <div class="page-header">
+  <div>
+    <h2>Budgets</h2>
+    <p>Create spending limits and stay in control of your money.</p>
+  </div>
+</div>
 
   <div class="stats-row">
-    <StatsCard
-      title="Total Budget"
-      :value="'R ' + totalBudget"
-      variant="red"
-    />
-    <StatsCard
-      title="Entries"
-      :value="financeStore.budgets.length"
-      variant="blue"
-    />
-  </div>
+
+  <StatsCard
+    title="Total Budget"
+    :value="'R ' + totalBudget"
+    variant="purple"
+  />
+
+  <StatsCard
+    title="Entries"
+    :value="financeStore.budgets.length"
+    variant="blue"
+  />
+
+</div>
 
   <form @submit.prevent="addBudget" class="income-form">
     <input v-model="source" placeholder="Source" />
@@ -79,75 +87,279 @@ export default {
 
 <style scoped>
 
-.stats-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 25px;
-  margin-top: 20px;
-  justify-content: center;
+/* =========================
+   PAGE
+========================= */
+
+.page-header{
+    margin-bottom:30px;
 }
 
-.insight-box {
-  background: #fff7e6;
-  padding: 20px;
-  border-left: 6px solid orange;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  margin-top: 20px;
+.page-header h2{
+    font-size:2rem;
+    color:#fff;
 }
 
-.income-card {
-  background: white;
-  padding: 18px;
-  border-radius: 18px;
-  margin-bottom: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+.page-header p{
+    color:#94a3b8;
+    margin-top:8px;
 }
 
-.income-header {
-  display: flex;
-  justify-content: space-between;
+.stats-row{
+    display:flex;
+    gap:20px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
 }
 
-.progress {
-  height: 8px;
-  background: #eee;
-  margin-top: 12px;
-  border-radius: 999px;
+/* =========================
+   FORM
+========================= */
+
+.income-form{
+
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+
+    background:#1e293b;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    padding:22px;
+
+    border-radius:18px;
+
+    margin-bottom:30px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+
 }
 
-.fill {
-  height: 100%;
-  width: 70%;
-  background: linear-gradient(90deg, #ef4444, #f97316);
-  border-radius: 999px;
+.income-form input{
+
+    flex:1;
+
+    min-width:180px;
+
+    background:#111827;
+
+    color:#fff;
+
+    border:1px solid #374151;
+
+    border-radius:12px;
+
+    padding:14px 16px;
+
+    font-size:15px;
+
+    transition:.3s;
+
 }
 
-.income-form {
-  margin-top: 20px;
-  gap: 12px;
-  background: #fff;
-  padding: 20px;
+.income-form input::placeholder{
+
+    color:#94a3b8;
+
 }
 
-.income-form input {
-  margin-right: 12px;
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+.income-form input:focus{
+
+    outline:none;
+
+    border-color:#8b5cf6;
+
+    box-shadow:0 0 0 3px rgba(139,92,246,.15);
+
 }
 
-.income-form button {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+.income-form button{
+
+    background:linear-gradient(135deg,#7c3aed,#6366f1);
+
+    color:white;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:14px 24px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
 }
-.income-form button:hover {
-  background-color: #dc2626;
+
+.income-form button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 20px rgba(124,58,237,.35);
+
+}
+
+/* =========================
+   INSIGHTS
+========================= */
+
+.insight-box{
+
+    background:linear-gradient(135deg,#1f2937,#273449);
+
+    border-left:5px solid #8b5cf6;
+
+    padding:24px;
+
+    border-radius:18px;
+
+    margin-bottom:30px;
+
+    color:white;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.25);
+
+}
+
+.insight-box h3{
+
+    color:#8b5cf6;
+
+    margin-bottom:10px;
+
+}
+
+.insight-box p{
+
+    color:#cbd5e1;
+
+}
+
+/* =========================
+   BUDGET LIST
+========================= */
+
+.income-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/* =========================
+   BUDGET CARD
+========================= */
+
+.income-card{
+
+    background:#1e293b;
+
+    border-radius:18px;
+
+    padding:22px;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+
+    transition:.25s;
+
+}
+
+.income-card:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#8b5cf6;
+
+}
+
+.income-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    color:white;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
+}
+
+.income-header span:last-child{
+
+    color:#8b5cf6;
+
+    font-size:18px;
+
+}
+
+/* =========================
+   PROGRESS BAR
+========================= */
+
+.progress{
+
+    height:10px;
+
+    background:#0f172a;
+
+    border-radius:999px;
+
+    overflow:hidden;
+
+}
+
+.fill{
+
+    width:70%;
+
+    height:100%;
+
+    border-radius:999px;
+
+    background:linear-gradient(
+        90deg,
+        #7c3aed,
+        #6366f1
+    );
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+.income-form{
+
+    flex-direction:column;
+
+}
+
+.income-form button{
+
+    width:100%;
+
+}
+
+.stats-row{
+
+    flex-direction:column;
+
+}
+
 }
 
 </style>
