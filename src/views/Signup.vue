@@ -1,258 +1,66 @@
 <template>
-  <div class="auth-page">
-
-    <div class="auth-left">
-      <h1>FinanceOS</h1>
-
-      <h2>Start building your financial future.</h2>
-
-      <p>
-        Create an account to track spending, build budgets,
-        grow investments and receive AI-powered financial insights.
+  <AuthShell title="Create your account" subtitle="Start tracking your finances in minutes">
+    <form v-if="!confirmationSent" @submit.prevent="handleSignup" class="space-y-4">
+      <div>
+        <label class="label">Full name</label>
+        <input v-model="fullName" type="text" class="input" required placeholder="Jane Doe" />
+      </div>
+      <div>
+        <label class="label">Email</label>
+        <input v-model="email" type="email" class="input" required placeholder="you@example.com" />
+      </div>
+      <div>
+        <label class="label">Password</label>
+        <input v-model="password" type="password" class="input" required minlength="6" placeholder="At least 6 characters" />
+      </div>
+      <p v-if="errorMsg" class="text-sm text-red-600 dark:text-red-400">{{ errorMsg }}</p>
+      <button type="submit" class="btn-primary w-full" :disabled="loading">
+        {{ loading ? 'Creating account…' : 'Sign Up' }}
+      </button>
+    </form>
+    <div v-else class="text-center py-4">
+      <div class="text-4xl mb-3">📧</div>
+      <p class="text-gray-700 dark:text-gray-200 font-medium mb-1">Check your inbox</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        We sent a confirmation link to {{ email }}. Confirm your email to finish signing up.
       </p>
     </div>
-
-    <div class="auth-card">
-
-      <h2>Create Account</h2>
-      <p class="subtitle">Join FinanceOS today.</p>
-
-      <form @submit.prevent="signup">
-
-        <div class="input-group">
-          <label>Email</label>
-          <input
-            v-model="email"
-            type="email"
-            placeholder="name@example.com"
-            required
-          />
-        </div>
-
-        <div class="input-group">
-          <label>Password</label>
-          <input
-            v-model="password"
-            type="password"
-            placeholder="Create a password"
-            required
-          />
-        </div>
-
-        <button type="submit">
-          Create Account
-        </button>
-
-      </form>
-
-      <p class="bottom-text">
-        Already have an account?
-        <router-link to="/login">Login</router-link>
-      </p>
-
-    </div>
-
-  </div>
+    <p class="text-center text-sm mt-6 text-gray-500 dark:text-gray-400">
+      Already have an account?
+      <router-link to="/login" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">Log in</router-link>
+    </p>
+  </AuthShell>
 </template>
 
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+import AuthShell from '../components/AuthShell.vue'
 
-<script>
-import { signup } from "../services/authService";
-import { db } from "../services/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+const fullName = ref('')
+const email = ref('')
+const password = ref('')
+const loading = ref(false)
+const errorMsg = ref('')
+const confirmationSent = ref(false)
+const router = useRouter()
+const auth = useAuthStore()
 
-export default {
-  name: "Signup",
-
-  data() {
-    return {
-      email: "",
-      password: "",
-    };
-  },
-
-  methods: {
-    async signup() {
-      try {
-        const userCredential = await signup(this.email, this.password);
-
-        const user = userCredential.user;
-
-        await setDoc(doc(db, "users", user.uid), {
-          uid: user.uid,
-          email: user.email,
-
-          fullName: "",
-
-          currency: "ZAR",
-
-          country: "South Africa",
-
-          monthlySalary: 0,
-
-          payday: 25,
-
-          createdAt: serverTimestamp(),
-
-          updatedAt: serverTimestamp(),
-        });
-
-        console.log("✅ Profile Created");
-
-        this.$router.push("/profile-setup");
-
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      }
-    }
+async function handleSignup() {
+  loading.value = true
+  errorMsg.value = ''
+  const { data, error } = await auth.signUp({ email: email.value, password: password.value, fullName: fullName.value })
+  loading.value = false
+  if (error) {
+    errorMsg.value = error.message
+    return
   }
-};
+  if (data.session) {
+    router.push('/dashboard')
+  } else {
+    // Email confirmation required before a session is issued
+    confirmationSent.value = true
+  }
+}
 </script>
-
-<style scoped>
-
-.auth-page{
-    min-height:100vh;
-    display:grid;
-    grid-template-columns:1fr 480px;
-    background:#0F1117;
-    color:#F8FAFC;
-    font-family:Inter,sans-serif;
-}
-
-.auth-left{
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding:80px;
-}
-
-.auth-left h1{
-    color:#4ADE80;
-    font-size:22px;
-    font-weight:700;
-    margin-bottom:40px;
-}
-
-.auth-left h2{
-    font-size:54px;
-    line-height:1.1;
-    margin-bottom:20px;
-}
-
-.auth-left p{
-    color:#94A3B8;
-    font-size:18px;
-    line-height:1.8;
-    max-width:500px;
-}
-
-.auth-card{
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding:60px;
-    background:#181C24;
-    box-shadow:-10px 0 40px rgba(0,0,0,.35);
-}
-
-.auth-card h2{
-    font-size:32px;
-    margin-bottom:10px;
-}
-
-.subtitle{
-    color:#94A3B8;
-    margin-bottom:40px;
-}
-
-form{
-    display:flex;
-    flex-direction:column;
-}
-
-.input-group{
-    display:flex;
-    flex-direction:column;
-    margin-bottom:20px;
-}
-
-label{
-    color:#CBD5E1;
-    margin-bottom:8px;
-    font-size:14px;
-}
-
-input{
-    background:#0F172A;
-    border:1px solid #334155;
-    color:white;
-    padding:15px;
-    border-radius:12px;
-    font-size:15px;
-    transition:.25s;
-}
-
-input::placeholder{
-    color:#64748B;
-}
-
-input:focus{
-    outline:none;
-    border-color:#4ADE80;
-    box-shadow:0 0 0 4px rgba(74,222,128,.15);
-}
-
-button{
-    margin-top:10px;
-    padding:15px;
-    background:#4ADE80;
-    color:#07110B;
-    border:none;
-    border-radius:12px;
-    font-weight:700;
-    font-size:15px;
-    cursor:pointer;
-    transition:.25s;
-}
-
-button:hover{
-    background:#22C55E;
-    transform:translateY(-2px);
-}
-
-.bottom-text{
-    text-align:center;
-    margin-top:30px;
-    color:#94A3B8;
-}
-
-.bottom-text a{
-    color:#4ADE80;
-    text-decoration:none;
-    font-weight:600;
-}
-
-.bottom-text a:hover{
-    text-decoration:underline;
-}
-
-@media (max-width:900px){
-
-.auth-page{
-    grid-template-columns:1fr;
-}
-
-.auth-left{
-    display:none;
-}
-
-.auth-card{
-    min-height:100vh;
-    justify-content:center;
-}
-
-}
-
-</style>

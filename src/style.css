@@ -1,152 +1,49 @@
-/* === Global Reset === */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-/* === Base Styles === */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f8fafc;
-  color: #333;
-  line-height: 1.6;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
 }
 
-/* === Container Utility === */
-.container {
-  width: 90%;
-  max-width: 1200px;
-  margin: auto;
-}
-
-/* === Headings === */
-h1, h2, h3, h4, h5 {
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: #2e7d32;
-}
-
-p {
-  margin-bottom: 10px;
-  color: #555;
-}
-
-/* === Buttons === */
-.btn {
-  display: inline-block;
-  padding: 12px 25px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease-in-out;
-  cursor: pointer;
+.card {
+  @apply bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800;
 }
 
 .btn-primary {
-  background: #2e7d32;
-  color: white;
-  border: 2px solid #2e7d32;
-}
-
-.btn-primary:hover {
-  background: #256028;
-  border-color: #256028;
+  @apply bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 .btn-secondary {
-  background: transparent;
-  color: #2e7d32;
-  border: 2px solid #2e7d32;
+  @apply bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-100 font-semibold px-4 py-2 rounded-lg transition-colors;
 }
 
-.btn-secondary:hover {
-  background: #2e7d32;
-  color: white;
+.btn-danger {
+  @apply bg-red-50 hover:bg-red-100 dark:bg-red-950 dark:hover:bg-red-900 text-red-600 dark:text-red-400 font-semibold px-4 py-2 rounded-lg transition-colors;
 }
 
-/* === Forms === */
-form {
-  max-width: 400px;
-  margin: 30px auto;
-  padding: 30px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+.input {
+  @apply w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500;
 }
 
-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border 0.3s;
-}
-
-input:focus {
-  border-color: #2e7d32;
-  outline: none;
-}
-
-/* === Cards === */
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-}
-
-/* === Navbar === */
-.navbar {
-  background: #2e7d32;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar h2 {
-  color: white;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  margin-left: 15px;
-  font-weight: 600;
-  transition: opacity 0.3s;
-}
-
-.navbar a:hover {
-  opacity: 0.8;
-}
-
-/* === Sections === */
-section {
-  padding: 60px 20px;
-}
-
-/* === Dashboard Grid === */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
-  padding: 30px 20px;
-}
-
-/* === Footer === */
-.footer {
-  text-align: center;
-  padding: 20px;
-  background: #f0f4f0;
-  color: #666;
-  font-size: 0.9rem;
+.label {
+  @apply block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1;
 }
