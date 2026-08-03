@@ -1,104 +1,53 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { auth } from "../services/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-
-import Home from "../views/Home.vue";
-import Login from "../views/Login.vue";
-import Signup from "../views/Signup.vue";
-
-import DashboardLayout from "../components/DashboardLayout.vue";
-import Dashboard from "../components/Dashboard.vue";
-import Expenses from "../components/Expenses.vue";
-import Income from "../components/Income.vue";
-import Budgets from "../components/Budgets.vue";
-import Investments from "../components/Investments.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const routes = [
+  { path: '/', name: 'Home', component: () => import('../views/Home.vue') },
+  { path: '/login', name: 'Login', component: () => import('../views/Login.vue'), meta: { guestOnly: true } },
+  { path: '/signup', name: 'Signup', component: () => import('../views/Signup.vue'), meta: { guestOnly: true } },
   {
-    path: "/",
-    name: "Home",
-    component: Home,
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: () => import('../views/ResetPassword.vue')
   },
   {
-    path: "/login",
-    name: "Login",
-    component: Login,
-  },
-  {
-    path: "/signup",
-    name: "Signup",
-    component: Signup,
-  },
-  {
-    path: "/dashboard",
-    component: DashboardLayout,
-    meta: {
-      requiresAuth: true,
-    },
+    path: '/dashboard',
+    component: () => import('../components/DashboardLayout.vue'),
+    meta: { requiresAuth: true },
     children: [
-      {
-        path: "",
-        name: "Dashboard",
-        component: Dashboard,
-      },
-      {
-        path: "expenses",
-        name: "Expenses",
-        component: Expenses,
-      },
-      {
-        path: "income",
-        name: "Income",
-        component: Income,
-      },
-      {
-        path: "budgets",
-        name: "Budgets",
-        component: Budgets,
-      },
-      {
-        path: "investments",
-        name: "Investments",
-        component: Investments,
-      },
-      {
-        path: "/profile-setup",
-        name: "ProfileSetup",
-        component: () => import("../views/ProfileSetup.vue"),
-        meta: {
-        requiresAuth: true,
+      { path: '', name: 'Dashboard', component: () => import('../views/Dashboard.vue') },
+      { path: 'expenses', name: 'Expenses', component: () => import('../views/Expenses.vue') },
+      { path: 'income', name: 'Income', component: () => import('../views/Income.vue') },
+      { path: 'budgets', name: 'Budgets', component: () => import('../views/Budgets.vue') },
+      { path: 'goals', name: 'Goals', component: () => import('../views/Goals.vue') },
+      { path: 'investments', name: 'Investments', component: () => import('../views/Investments.vue') },
+      { path: 'recurring', name: 'Recurring', component: () => import('../views/Recurring.vue') },
+      { path: 'reports', name: 'Reports', component: () => import('../views/Reports.vue') },
+      { path: 'settings', name: 'Settings', component: () => import('../views/Settings.vue') }
+    ]
   },
-},
-    ],
-  },
-];
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('../views/NotFound.vue') }
+]
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
-
-function getCurrentUser() {
-  return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      unsubscribe();
-      resolve(user);
-    });
-  });
-}
-
-router.beforeEach(async (to, from, next) => {
-  if (!to.meta.requiresAuth) {
-    return next();
+  scrollBehavior() {
+    return { top: 0 }
   }
+})
 
-  const user = await getCurrentUser();
+router.beforeEach(async (to) => {
+  const auth = useAuthStore()
+  if (!auth.initialized) await auth.init()
 
-  if (user) {
-    next();
-  } else {
-    next("/login");
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { name: 'Login', query: { redirect: to.fullPath } }
   }
-});
+  if (to.meta.guestOnly && auth.isAuthenticated) {
+    return { name: 'Dashboard' }
+  }
+  return true
+})
 
-export default router;
+export default router

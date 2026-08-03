@@ -1,245 +1,88 @@
 # Personal Finance Dashboard
 
-**Personal Finance Dashboard** is a web application designed to help users track, manage, and understand their financial lives in one centralized platform. The application provides users with tools to monitor income, expenses, budgets, and investments while offering visual insights into their overall financial health.
+A full-featured personal finance tracker built with **Vue 3**, **Pinia**, **Tailwind CSS**, and **Supabase** (Postgres + Auth).
 
-Built with **Vue.js** and **Firebase**, the project aims to simplify personal financial management through an intuitive and responsive user experience.
+## Features
 
----
+- 🔐 Real authentication (email/password, email confirmation, password reset) via Supabase Auth
+- 💸 Expense & income tracking with custom categories
+- 📊 Budgets with configurable alert thresholds
+- 🎯 Financial goals with a savings/contribution tracker
+- 🔁 Recurring transactions (daily/weekly/monthly/yearly), auto-applied on login
+- 📈 Investment tracking with portfolio allocation and gain/loss
+- 📉 Interactive charts (Chart.js): income vs. expenses, category breakdown, allocation
+- 📑 Monthly / yearly / all-time reports
+- 📤 Export to CSV and PDF
+- 🔔 In-app budget & goal notifications
+- 🌗 Dark mode (light / dark / system)
+- 🌍 Multi-currency support with live exchange rates (optional API key) or static fallback rates
+- 🤖 Rule-based "smart insights" and recommendations (spending trends, savings rate, budget/goal alerts) — runs entirely client-side against your own data, no external AI call required
+- 📱 Responsive layout with a mobile nav drawer
 
-# Features
+## 1. Set up Supabase
 
-* User authentication
-* Secure account registration and login
-* Financial dashboard overview
-* Income tracking
-* Expense management
-* Budget planning
-* Investment tracking
-* Financial statistics cards
-* Centralized financial state management
-* Responsive dashboard layout
-* Firebase backend integration
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Go to **SQL Editor** → **New query**, paste the contents of [`supabase/schema.sql`](./supabase/schema.sql), and run it.
+   This creates all tables, indexes, row-level security policies, and triggers (including auto-seeding default categories and a profile row for every new user).
+3. Go to **Authentication → Providers** and confirm **Email** is enabled. (Optionally disable "Confirm email" while developing locally to skip the confirmation step.)
+4. Go to **Settings → API** and copy your **Project URL** and **anon public key**.
 
----
-
-# Tech Stack
-
-* Vue.js
-* Vue Router
-* JavaScript (ES6+)
-* Firebase
-* CSS3
-* HTML5
-
----
-
-# Project Structure
-
-```text
-personal-finance-dashboard/
-│
-├── .vs/
-├── .vscode/
-│   └── extensions.json
-│
-├── src/
-│   ├── components/
-│   │   ├── Budget.vue
-│   │   ├── Dashboard.vue
-│   │   ├── DashboardLayout.vue
-│   │   ├── Expenses.vue
-│   │   ├── Income.vue
-│   │   ├── Investments.vue
-│   │   └── StatsCard.vue
-│   │
-│   ├── context/
-│   │   └── financeStore.js
-│   │
-│   ├── router/
-│   │   └── index.js
-│   │
-│   ├── services/
-│   │   └── firebase.js
-│   │
-│   ├── views/
-│   │   ├── Home.vue
-│   │   ├── Login.vue
-│   │   └── SignUp.vue
-│   │
-│   ├── App.vue
-│   ├── main.js
-│   └── style.css
-│
-├── .gitattributes
-├── .gitignore
-├── index.html
-├── package.json
-├── package-lock.json
-├── vue.config.js
-└── README.md
-```
-
----
-
-# Application Architecture
-
-The application follows a component-based architecture using Vue.js.
-
-* **Components** handle reusable dashboard functionality.
-* **Views** manage page-level interfaces.
-* **Router** handles navigation.
-* **Context Store** manages financial state.
-* **Firebase Service** handles backend services and authentication.
-
----
-
-# Authentication
-
-Authentication is managed through Firebase.
-
-Current authentication features include:
-
-* User registration
-* User login
-* Session persistence
-* Secure authentication handling
-
----
-
-# Main Features
-
-## Dashboard
-
-The dashboard provides users with a complete overview of their finances, including:
-
-* Financial summaries
-* Key statistics
-* Budget information
-* Income and expense tracking
-* Investment monitoring
-
----
-
-## Income Tracking
-
-Users can monitor and organize their income sources.
-
----
-
-## Expense Management
-
-Track spending habits and categorize expenses.
-
----
-
-## Budget Planning
-
-Set budgets and monitor spending against financial goals.
-
----
-
-## Investment Tracking
-
-Monitor investment allocations and financial growth.
-
----
-
-## Statistics Cards
-
-Quick visual summaries of important financial metrics.
-
----
-
-# State Management
-
-The application uses:
-
-```text
-financeStore.js
-```
-
-to centralize financial data and maintain consistency throughout the application.
-
----
-
-# Getting Started
-
-## Prerequisites
-
-* Node.js
-* npm
-
----
-
-## Installation
-
-Clone the repository:
+## 2. Configure the app
 
 ```bash
-git clone https://github.com/LupiwoPhillips/personal-finance-dashbaord.git
+cp .env.example .env
 ```
 
-Navigate to the project folder:
+Edit `.env`:
 
-```bash
-cd personal-finance-dashbaord
+```
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
 ```
 
-Install dependencies:
+The optional `VITE_EXCHANGE_RATE_API_KEY` enables live currency conversion rates (via exchangerate-api.com's free tier). Without it, the app uses reasonable static fallback rates so multi-currency still works out of the box.
+
+## 3. Install & run
 
 ```bash
 npm install
-```
-
-Run the development server:
-
-```bash
 npm run dev
 ```
 
----
+Visit `http://localhost:5173`, sign up, and (if email confirmation is on) confirm via the email Supabase sends.
 
-# Future Improvements
+## 4. Build for production
 
-Planned improvements for the project include:
+```bash
+npm run build
+npm run preview
+```
 
-* Expense categories
-* Financial goal tracking
-* Savings tracker
-* Recurring transactions
-* Data visualization charts
-* Monthly and yearly reports
-* Export to PDF or CSV
-* Budget alerts and notifications
-* Dark mode support
-* Mobile responsiveness improvements
-* Multi-currency support
-* AI-powered financial insights
-* Investment analytics
-* Financial recommendations
+Deploy the `dist/` folder to any static host (Vercel, Netlify, Cloudflare Pages, etc.). Set the same `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` environment variables in your host's dashboard.
 
----
+## Project structure
 
-# Vision
+```
+src/
+  components/     Reusable UI (layout, charts, forms, lists, insights panel)
+  composables/     useTheme (dark mode), useCurrency
+  lib/            supabase client, currency helpers, CSV/PDF export, insights engine
+  router/         Vue Router with auth guards
+  stores/         Pinia stores: auth, finance (all Supabase CRUD lives here)
+  views/          One view per route (Dashboard, Expenses, Income, Budgets, Goals,
+                  Investments, Recurring, Reports, Settings, auth pages)
+supabase/
+  schema.sql      Full DB schema, RLS policies, and triggers — run this first
+```
 
-The vision behind the Personal Finance Dashboard is to provide individuals with a simple yet powerful platform for understanding and improving their financial health.
+## Data model notes
 
-Many personal finance tools can be overwhelming or overly complex. This project aims to deliver an accessible financial management experience that allows users to:
+- Every table has row-level security enabled and scoped to `auth.uid()` — users can only ever see their own data.
+- `transactions` is a single unified ledger for both income and expense rows (`type` column), which keeps reporting and recurring-rule logic simple.
+- New users get a `profiles` row and a set of default categories automatically via database triggers — no client-side seeding required.
+- `goals.current_amount` is maintained automatically from `goal_contributions` via a trigger, so it can never drift out of sync.
 
-* Understand spending habits.
-* Monitor income and expenses.
-* Track investments.
-* Create sustainable budgets.
-* Make informed financial decisions.
+## Extending further
 
-The long-term goal is to evolve the application into a complete personal financial operating system that empowers users to achieve financial stability and long-term growth.
-
----
-
-# Author
-
-**Lupiwo Phillips**
-
-Junior Software Developer
-
----
+- Swap the rule-based insights engine (`src/lib/insights.js`) for a real LLM call if you want generative recommendations — the function signature already takes the same summarized stats you'd pass as context to a model.
+- Add bank-feed integrations (Plaid, Stitch, etc.) by writing into the same `transactions` table from a serverless function/webhook.
