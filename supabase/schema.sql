@@ -300,6 +300,169 @@ drop trigger if exists set_updated_at_investments on public.investments;
 create trigger set_updated_at_investments before update on public.investments
   for each row execute procedure public.set_updated_at();
 
+
+-- ============================================================================
+-- Financial Intelligence
+-- ============================================================================
+
+create table if not exists public.financial_snapshots (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references auth.users(id)
+    on delete cascade,
+
+  snapshot_date date not null,
+
+  total_income numeric(14, 2) not null default 0,
+  total_expenses numeric(14, 2) not null default 0,
+  net_cash_flow numeric(14, 2) not null default 0,
+
+  savings_rate numeric(7, 2) not null default 0,
+
+  financial_health_score int
+    check (
+      financial_health_score between 0 and 100
+    ),
+
+  cash_flow_score int
+    check (
+      cash_flow_score between 0 and 100
+    ),
+
+  savings_score int
+    check (
+      savings_score between 0 and 100
+    ),
+
+  goals_score int
+    check (
+      goals_score between 0 and 100
+    ),
+
+  investment_score int
+    check (
+      investment_score between 0 and 100
+    ),
+
+  commitment_score int
+    check (
+      commitment_score between 0 and 100
+    ),
+
+  created_at timestamptz not null default now(),
+
+  unique (
+    user_id,
+    snapshot_date
+  )
+);
+
+create index if not exists
+financial_snapshots_user_date_idx
+on public.financial_snapshots (
+  user_id,
+  snapshot_date desc
+);
+
+alter table public.financial_snapshots
+enable row level security;
+
+drop policy if exists
+"financial_snapshots_all_own"
+on public.financial_snapshots;
+
+create policy
+"financial_snapshots_all_own"
+on public.financial_snapshots
+
+for all
+
+using (
+  auth.uid() = user_id
+)
+
+with check (
+  auth.uid() = user_id
+);
+
+
+-- ---------------------------------------------------------------------------
+-- Financial behavioural signals
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.financial_signals (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references auth.users(id)
+    on delete cascade,
+
+  code text not null,
+
+  severity text not null
+    check (
+      severity in (
+        'low',
+        'medium',
+        'high',
+        'positive'
+      )
+    ),
+
+  category text not null,
+
+  title text not null,
+
+  description text not null,
+
+  detected_on date not null
+    default current_date,
+
+  resolved boolean not null
+    default false,
+
+  metadata jsonb not null
+    default '{}'::jsonb,
+
+  created_at timestamptz not null
+    default now()
+);
+
+create index if not exists
+financial_signals_user_date_idx
+on public.financial_signals (
+  user_id,
+  detected_on desc
+);
+
+create index if not exists
+financial_signals_user_code_idx
+on public.financial_signals (
+  user_id,
+  code
+);
+
+alter table public.financial_signals
+enable row level security;
+
+drop policy if exists
+"financial_signals_all_own"
+on public.financial_signals;
+
+create policy
+"financial_signals_all_own"
+on public.financial_signals
+
+for all
+
+using (
+  auth.uid() = user_id
+)
+
+with check (
+  auth.uid() = user_id
+);
 -- ============================================================================
 -- Done. Next steps:
 -- 1. In Supabase Dashboard -> Authentication -> Providers, ensure Email is on.
