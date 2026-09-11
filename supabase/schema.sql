@@ -469,3 +469,346 @@ with check (
 -- 2. Copy your Project URL + anon key into .env (see .env.example).
 -- 3. (Optional) Authentication -> Email Templates: customize confirmation email.
 -- ============================================================================
+
+-- ============================================================
+-- PHASE 1.5
+-- FINANCIAL POSITION
+-- ACCOUNTS, ASSETS AND LIABILITIES
+-- ============================================================
+
+
+-- ============================================================
+-- ACCOUNTS
+-- Represents places where money is held or accessed.
+--
+-- Examples:
+-- Bank account
+-- Savings account
+-- Cash wallet
+-- Credit card
+-- Investment account
+-- ============================================================
+
+create table if not exists public.accounts (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references public.profiles(id)
+    on delete cascade,
+
+  name text not null,
+
+  account_type text not null
+    check (
+      account_type in (
+        'bank',
+        'savings',
+        'cash',
+        'credit_card',
+        'investment',
+        'other'
+      )
+    ),
+
+  institution text,
+
+  currency text not null default 'ZAR',
+
+  current_balance numeric(14,2) not null default 0,
+
+  credit_limit numeric(14,2),
+
+  is_active boolean not null default true,
+
+  notes text,
+
+  created_at timestamptz not null default now(),
+
+  updated_at timestamptz not null default now()
+);
+
+
+-- ============================================================
+-- ASSETS
+-- Things the user owns that have financial value.
+--
+-- Examples:
+-- Property
+-- Vehicle
+-- Investments
+-- Savings
+-- Business ownership
+-- Other valuable assets
+-- ============================================================
+
+create table if not exists public.assets (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references public.profiles(id)
+    on delete cascade,
+
+  name text not null,
+
+  asset_type text not null
+    check (
+      asset_type in (
+        'property',
+        'vehicle',
+        'investment',
+        'cash',
+        'business',
+        'personal',
+        'other'
+      )
+    ),
+
+  current_value numeric(14,2) not null default 0,
+
+  purchase_value numeric(14,2),
+
+  currency text not null default 'ZAR',
+
+  notes text,
+
+  created_at timestamptz not null default now(),
+
+  updated_at timestamptz not null default now()
+);
+
+
+-- ============================================================
+-- LIABILITIES
+-- Money the user owes.
+--
+-- Examples:
+-- Credit card
+-- Personal loan
+-- Vehicle finance
+-- Home loan
+-- Student loan
+-- Other debt
+-- ============================================================
+
+create table if not exists public.liabilities (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id uuid not null
+    references public.profiles(id)
+    on delete cascade,
+
+  name text not null,
+
+  liability_type text not null
+    check (
+      liability_type in (
+        'credit_card',
+        'personal_loan',
+        'vehicle_loan',
+        'home_loan',
+        'student_loan',
+        'overdraft',
+        'other'
+      )
+    ),
+
+  current_balance numeric(14,2) not null default 0,
+
+  original_balance numeric(14,2),
+
+  interest_rate numeric(7,4),
+
+  minimum_payment numeric(14,2),
+
+  currency text not null default 'ZAR',
+
+  due_date date,
+
+  notes text,
+
+  is_active boolean not null default true,
+
+  created_at timestamptz not null default now(),
+
+  updated_at timestamptz not null default now()
+);
+
+
+-- ============================================================
+-- INDEXES
+-- ============================================================
+
+create index if not exists accounts_user_id_idx
+on public.accounts(user_id);
+
+create index if not exists assets_user_id_idx
+on public.assets(user_id);
+
+create index if not exists liabilities_user_id_idx
+on public.liabilities(user_id);
+
+
+-- ============================================================
+-- ROW LEVEL SECURITY
+-- Users may only access their own financial information.
+-- ============================================================
+
+alter table public.accounts enable row level security;
+
+alter table public.assets enable row level security;
+
+alter table public.liabilities enable row level security;
+
+
+-- ============================================================
+-- ACCOUNTS POLICIES
+-- ============================================================
+
+drop policy if exists "Users can view their own accounts"
+on public.accounts;
+
+create policy "Users can view their own accounts"
+on public.accounts
+for select
+using (auth.uid() = user_id);
+
+
+drop policy if exists "Users can insert their own accounts"
+on public.accounts;
+
+create policy "Users can insert their own accounts"
+on public.accounts
+for insert
+with check (auth.uid() = user_id);
+
+
+drop policy if exists "Users can update their own accounts"
+on public.accounts;
+
+create policy "Users can update their own accounts"
+on public.accounts
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+
+drop policy if exists "Users can delete their own accounts"
+on public.accounts;
+
+create policy "Users can delete their own accounts"
+on public.accounts
+for delete
+using (auth.uid() = user_id);
+
+
+-- ============================================================
+-- ASSETS POLICIES
+-- ============================================================
+
+drop policy if exists "Users can view their own assets"
+on public.assets;
+
+create policy "Users can view their own assets"
+on public.assets
+for select
+using (auth.uid() = user_id);
+
+
+drop policy if exists "Users can insert their own assets"
+on public.assets;
+
+create policy "Users can insert their own assets"
+on public.assets
+for insert
+with check (auth.uid() = user_id);
+
+
+drop policy if exists "Users can update their own assets"
+on public.assets;
+
+create policy "Users can update their own assets"
+on public.assets
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+
+drop policy if exists "Users can delete their own assets"
+on public.assets;
+
+create policy "Users can delete their own assets"
+on public.assets
+for delete
+using (auth.uid() = user_id);
+
+
+-- ============================================================
+-- LIABILITIES POLICIES
+-- ============================================================
+
+drop policy if exists "Users can view their own liabilities"
+on public.liabilities;
+
+create policy "Users can view their own liabilities"
+on public.liabilities
+for select
+using (auth.uid() = user_id);
+
+
+drop policy if exists "Users can insert their own liabilities"
+on public.liabilities;
+
+create policy "Users can insert their own liabilities"
+on public.liabilities
+for insert
+with check (auth.uid() = user_id);
+
+
+drop policy if exists "Users can update their own liabilities"
+on public.liabilities;
+
+create policy "Users can update their own liabilities"
+on public.liabilities
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+
+drop policy if exists "Users can delete their own liabilities"
+on public.liabilities;
+
+create policy "Users can delete their own liabilities"
+on public.liabilities
+for delete
+using (auth.uid() = user_id);
+
+
+-- ============================================================
+-- UPDATED_AT TRIGGERS
+-- ============================================================
+
+drop trigger if exists set_accounts_updated_at
+on public.accounts;
+
+create trigger set_accounts_updated_at
+before update on public.accounts
+for each row
+execute function public.set_updated_at();
+
+
+drop trigger if exists set_assets_updated_at
+on public.assets;
+
+create trigger set_assets_updated_at
+before update on public.assets
+for each row
+execute function public.set_updated_at();
+
+
+drop trigger if exists set_liabilities_updated_at
+on public.liabilities;
+
+create trigger set_liabilities_updated_at
+before update on public.liabilities
+for each row
+execute function public.set_updated_at();
