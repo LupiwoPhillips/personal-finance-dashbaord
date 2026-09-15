@@ -1,88 +1,149 @@
 # Personal Finance Dashboard
 
-A full-featured personal finance tracker built with **Vue 3**, **Pinia**, **Tailwind CSS**, and **Supabase** (Postgres + Auth).
+A full-stack personal finance application built with **Vue 3, Pinia, Tailwind CSS, and Supabase**.
+
+The application allows users to manage income and expenses, create budgets and financial goals, track investments, monitor recurring transactions, and analyse their financial activity through reports and interactive charts.
 
 ## Features
 
-- 🔐 Real authentication (email/password, email confirmation, password reset) via Supabase Auth
-- 💸 Expense & income tracking with custom categories
-- 📊 Budgets with configurable alert thresholds
-- 🎯 Financial goals with a savings/contribution tracker
-- 🔁 Recurring transactions (daily/weekly/monthly/yearly), auto-applied on login
-- 📈 Investment tracking with portfolio allocation and gain/loss
-- 📉 Interactive charts (Chart.js): income vs. expenses, category breakdown, allocation
-- 📑 Monthly / yearly / all-time reports
-- 📤 Export to CSV and PDF
-- 🔔 In-app budget & goal notifications
-- 🌗 Dark mode (light / dark / system)
-- 🌍 Multi-currency support with live exchange rates (optional API key) or static fallback rates
-- 🤖 Rule-based "smart insights" and recommendations (spending trends, savings rate, budget/goal alerts) — runs entirely client-side against your own data, no external AI call required
-- 📱 Responsive layout with a mobile nav drawer
+* 🔐 Email/password authentication with Supabase Auth
+* 💸 Income and expense tracking
+* 🏷️ Custom transaction categories
+* 📊 Budget tracking with configurable alerts
+* 🎯 Financial goals and contribution tracking
+* 🔁 Recurring transactions
+* 📈 Investment and portfolio tracking
+* 📊 Interactive financial charts with Chart.js
+* 📑 Monthly, yearly, and all-time reports
+* 📤 CSV and PDF exports
+* 🔔 Budget and goal notifications
+* 🌗 Dark, light, and system themes
+* 🌍 Multi-currency support with exchange-rate integration
+* 🤖 Client-side financial insights based on spending and savings data
+* 📱 Responsive mobile-first interface
 
-## 1. Set up Supabase
+## Tech Stack
 
-1. Create a free project at [supabase.com](https://supabase.com).
-2. Go to **SQL Editor** → **New query**, paste the contents of [`supabase/schema.sql`](./supabase/schema.sql), and run it.
-   This creates all tables, indexes, row-level security policies, and triggers (including auto-seeding default categories and a profile row for every new user).
-3. Go to **Authentication → Providers** and confirm **Email** is enabled. (Optionally disable "Confirm email" while developing locally to skip the confirmation step.)
-4. Go to **Settings → API** and copy your **Project URL** and **anon public key**.
+**Frontend**
 
-## 2. Configure the app
+* Vue 3
+* JavaScript (ES6+)
+* Pinia
+* Vue Router
+* Tailwind CSS
+* Chart.js
+
+**Backend & Data**
+
+* Supabase
+* PostgreSQL
+* Supabase Auth
+* Row Level Security (RLS)
+* Database triggers
+
+**Development**
+
+* Vite
+* npm
+* Git & GitHub
+
+## Architecture
+
+```text
+src/
+├── components/     Reusable UI components
+├── composables/    Shared application logic
+├── lib/            Supabase client, exports, currency and insights logic
+├── router/         Routes and authentication guards
+├── stores/         Pinia state management and database operations
+├── views/          Application pages
+└── main.js
+
+supabase/
+└── schema.sql      Database schema, RLS policies and triggers
+```
+
+The application separates UI components, views, state management, shared logic, and database operations to keep the codebase maintainable as functionality grows.
+
+## Data & Security
+
+User data is protected using **Supabase Auth and PostgreSQL Row Level Security**.
+
+RLS policies restrict database access using the authenticated user's ID, ensuring users can only access records belonging to their account.
+
+Database triggers are also used for tasks such as:
+
+* Creating user profiles
+* Seeding default categories
+* Maintaining goal contribution totals
+
+No private credentials or secrets should be committed to the repository.
+
+## Getting Started
+
+### 1. Configure environment variables
+
+Create a local `.env` file from the example:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Add your local configuration:
 
+```env
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_EXCHANGE_RATE_API_KEY=your-api-key
 ```
-VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-public-key
+
+The `.env` file is intentionally excluded from version control.
+
+### 2. Configure Supabase
+
+Run:
+
+```text
+supabase/schema.sql
 ```
 
-The optional `VITE_EXCHANGE_RATE_API_KEY` enables live currency conversion rates (via exchangerate-api.com's free tier). Without it, the app uses reasonable static fallback rates so multi-currency still works out of the box.
+in the Supabase SQL Editor to create the required database tables, policies, indexes, and triggers.
 
-## 3. Install & run
+### 3. Install dependencies
 
 ```bash
 npm install
+```
+
+### 4. Start the development server
+
+```bash
 npm run dev
 ```
 
-Visit `http://localhost:5173`, sign up, and (if email confirmation is on) confirm via the email Supabase sends.
-
-## 4. Build for production
+### 5. Build for production
 
 ```bash
 npm run build
-npm run preview
 ```
 
-Deploy the `dist/` folder to any static host (Vercel, Netlify, Cloudflare Pages, etc.). Set the same `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` environment variables in your host's dashboard.
+## What I Built
 
-## Project structure
+This project was built to strengthen my understanding of:
 
-```
-src/
-  components/     Reusable UI (layout, charts, forms, lists, insights panel)
-  composables/     useTheme (dark mode), useCurrency
-  lib/            supabase client, currency helpers, CSV/PDF export, insights engine
-  router/         Vue Router with auth guards
-  stores/         Pinia stores: auth, finance (all Supabase CRUD lives here)
-  views/          One view per route (Dashboard, Expenses, Income, Budgets, Goals,
-                  Investments, Recurring, Reports, Settings, auth pages)
-supabase/
-  schema.sql      Full DB schema, RLS policies, and triggers — run this first
-```
+* Building structured Vue applications
+* State management with Pinia
+* Authentication and protected routes
+* Supabase and PostgreSQL
+* Row Level Security
+* Database relationships and triggers
+* CRUD operations
+* Data visualisation
+* API integration
+* Responsive UI development
+* Separating application logic into maintainable modules
 
-## Data model notes
+## Author
 
-- Every table has row-level security enabled and scoped to `auth.uid()` — users can only ever see their own data.
-- `transactions` is a single unified ledger for both income and expense rows (`type` column), which keeps reporting and recurring-rule logic simple.
-- New users get a `profiles` row and a set of default categories automatically via database triggers — no client-side seeding required.
-- `goals.current_amount` is maintained automatically from `goal_contributions` via a trigger, so it can never drift out of sync.
-
-## Extending further
-
-- Swap the rule-based insights engine (`src/lib/insights.js`) for a real LLM call if you want generative recommendations — the function signature already takes the same summarized stats you'd pass as context to a model.
-- Add bank-feed integrations (Plaid, Stitch, etc.) by writing into the same `transactions` table from a serverless function/webhook.
+**Lupiwo Phillips**
+Junior Software Developer
