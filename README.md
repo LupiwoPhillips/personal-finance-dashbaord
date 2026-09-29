@@ -1,30 +1,63 @@
 # Personal Finance Dashboard
 
-A full-stack personal finance application built with **Vue 3, Pinia, Tailwind CSS, and Supabase**.
+**Full-stack personal finance application built with Vue 3, Pinia, Tailwind CSS, and Supabase.**
 
-The application allows users to manage income and expenses, create budgets and financial goals, track investments, monitor recurring transactions, and analyse their financial activity through reports and interactive charts.
+Personal Finance Dashboard is a responsive web application that allows users to manage their income and expenses, create budgets and financial goals, track investments and recurring transactions, and analyse their financial activity through reports and interactive data visualisations.
+
+The project was built to develop practical experience with **full-stack application development, authentication, database design, state management, API integration, data visualisation, and secure user-specific data access**.
+
+---
 
 ## Features
 
-* 🔐 Email/password authentication with Supabase Auth
-* 💸 Income and expense tracking
-* 🏷️ Custom transaction categories
-* 📊 Budget tracking with configurable alerts
-* 🎯 Financial goals and contribution tracking
-* 🔁 Recurring transactions
-* 📈 Investment and portfolio tracking
-* 📊 Interactive financial charts with Chart.js
-* 📑 Monthly, yearly, and all-time reports
-* 📤 CSV and PDF exports
-* 🔔 Budget and goal notifications
-* 🌗 Dark, light, and system themes
-* 🌍 Multi-currency support with exchange-rate integration
-* 🤖 Client-side financial insights based on spending and savings data
-* 📱 Responsive mobile-first interface
+### Financial Management
 
-## Tech Stack
+* Track income and expenses
+* Create custom transaction categories
+* Manage budgets
+* Monitor spending against budgets
+* Create financial goals
+* Track goal contributions
+* Manage recurring transactions
 
-**Frontend**
+### Investments
+
+* Track investments
+* Monitor portfolio activity
+* Record investment information
+* View investment-related financial data
+
+### Reports & Insights
+
+* Monthly reports
+* Yearly reports
+* All-time financial reports
+* Interactive charts and visualisations
+* Spending and savings insights
+* Financial activity analysis
+
+### Data & Export
+
+* CSV exports
+* PDF exports
+* Multi-currency support
+* Exchange-rate integration
+
+### User Experience
+
+* Email/password authentication
+* Protected application routes
+* Budget and goal notifications
+* Dark theme
+* Light theme
+* System theme
+* Responsive mobile-first interface
+
+---
+
+## Technology
+
+### Frontend
 
 * Vue 3
 * JavaScript (ES6+)
@@ -33,7 +66,7 @@ The application allows users to manage income and expenses, create budgets and f
 * Tailwind CSS
 * Chart.js
 
-**Backend & Data**
+### Backend & Data
 
 * Supabase
 * PostgreSQL
@@ -41,109 +74,105 @@ The application allows users to manage income and expenses, create budgets and f
 * Row Level Security (RLS)
 * Database triggers
 
-**Development**
+### Development
 
 * Vite
 * npm
-* Git & GitHub
+* Git
+* GitHub
+* Vercel
 
-## Architecture
+---
 
-```text
-src/
-├── components/     Reusable UI components
-├── composables/    Shared application logic
-├── lib/            Supabase client, exports, currency and insights logic
-├── router/         Routes and authentication guards
-├── stores/         Pinia state management and database operations
-├── views/          Application pages
-└── main.js
+## Application
 
-supabase/
-└── schema.sql      Database schema, RLS policies and triggers
-```
+The application separates different areas of responsibility across the frontend and backend.
 
-The application separates UI components, views, state management, shared logic, and database operations to keep the codebase maintainable as functionality grows.
+The frontend handles:
+
+* User interfaces
+* Application views
+* Client-side state
+* Navigation
+* Reusable components
+* Shared application logic
+* Data visualisation
+
+Supabase and PostgreSQL handle:
+
+* User authentication
+* Persistent financial data
+* Database relationships
+* Access control
+* Row Level Security
+* Database triggers
+
+This separation allows the application to support multiple financial workflows while keeping the codebase maintainable as functionality grows.
+
+---
 
 ## Data & Security
 
-User data is protected using **Supabase Auth and PostgreSQL Row Level Security**.
+Personal Finance Dashboard uses **Supabase Auth and PostgreSQL Row Level Security** to protect user data.
 
-RLS policies restrict database access using the authenticated user's ID, ensuring users can only access records belonging to their account.
+RLS policies restrict database access based on the authenticated user's ID, ensuring that users can only access financial records belonging to their account.
 
-Database triggers are also used for tasks such as:
+Database triggers are also used for application-level operations such as:
 
 * Creating user profiles
 * Seeding default categories
 * Maintaining goal contribution totals
 
-No private credentials or secrets should be committed to the repository.
+Sensitive credentials and private configuration are kept outside the repository through environment variables.
 
-## Getting Started
+---
 
-### 1. Configure environment variables
+## Deployment
 
-Create a local `.env` file from the example:
+Personal Finance Dashboard is deployed using **Vercel** and is available as a live web application.
 
-```bash
-cp .env.example .env
-```
-
-Add your local configuration:
-
-```env
-VITE_SUPABASE_URL=your-supabase-project-url
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_EXCHANGE_RATE_API_KEY=your-api-key
-```
-
-The `.env` file is intentionally excluded from version control.
-
-### 2. Configure Supabase
-
-Run:
-
-```text
-supabase/schema.sql
-```
-
-in the Supabase SQL Editor to create the required database tables, policies, indexes, and triggers.
-
-### 3. Install dependencies
-
-```bash
-npm install
-```
-
-### 4. Start the development server
-
-```bash
-npm run dev
-```
-
-### 5. Build for production
-
-```bash
-npm run build
-```
+---
 
 ## What I Built
 
-This project was built to strengthen my understanding of:
+This project was built as a practical full-stack application to strengthen my understanding of how a frontend application connects to authentication, databases, APIs, and application logic.
 
-* Building structured Vue applications
-* State management with Pinia
+Through the project, I worked with:
+
+* Vue application architecture
+* Pinia state management
 * Authentication and protected routes
 * Supabase and PostgreSQL
 * Row Level Security
-* Database relationships and triggers
+* Database relationships
+* Database triggers
 * CRUD operations
-* Data visualisation
-* API integration
-* Responsive UI development
-* Separating application logic into maintainable modules
+* REST/API integration
+* Exchange-rate integration
+* Data visualisation with Chart.js
+* CSV and PDF generation
+* Financial data analysis
+* Responsive interface development
+* Theme management
+* Modular application architecture
+
+---
+
+## Why I Built This
+
+Personal Finance Dashboard was built to move beyond simple frontend applications and work with **real persistent data and backend functionality**.
+
+The project gave me practical experience designing an application where users can create, modify, analyse, and securely manage their own data.
+
+It also introduced me to backend concepts such as **authentication, PostgreSQL, database relationships, Row Level Security, and database triggers**, while continuing to develop my frontend skills with Vue and Pinia.
+
+The project forms part of my broader development journey toward building full-featured applications **layer by layer, from the interface to the underlying functionality**.
+
+---
 
 ## Author
 
 **Lupiwo Phillips**
 Junior Software Developer
+
+> Building applications layer by layer, from the interface to the underlying functionality.
